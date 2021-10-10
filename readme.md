@@ -10,9 +10,8 @@
 
 ## Techstack
 - Django
-- Elasticsearch
+- Postgres
 - Docker
-- Azure
 
 ### Steps in creating this MVP
 
