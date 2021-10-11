@@ -13,17 +13,20 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file_path = 'stock_seed_data/symbols_valid_meta.csv'
+        print(file_path, "HI")
         with open(file_path) as file:
 
             for row in file:
+                row = row.split(",")
                 # destructure rows
-
+                print(row, type(row), "ROW INFO")
                 symbol,security_name,market_category  = row[1],row[2], row[4]
-                
+                print(symbol, security_name, market_category,"STOCK_INFO")
                 new_stock = Stock(
                     ticker=symbol,
                     security_name=security_name,
-                    market_category= market_category
+                    market_category= market_category,
+                    asset_class="STOCK"
                 )
                 new_stock.save()
                 self.stdout.write(self.style.SUCCESS(f'{symbol} added to db'))
