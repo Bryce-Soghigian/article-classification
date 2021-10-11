@@ -4,9 +4,10 @@ from django.db.models.fields.related import ForeignKey
 
 # Create your models here.
 class Stock(models.Model):
-    ticker = models.TextField(primary_key=True)
+    ticker = models.TextField(primary_key=True, unique=True)
     security_name = models.TextField()
-    market_catagory = models.TextField()
+    market_category = models.TextField()
+    asset_class = models.TextField() 
     
     def __repr__(self) -> str:
         return f'ASSET__{self.ticker}'
