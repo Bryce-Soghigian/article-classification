@@ -2,8 +2,10 @@ import json
 from django.http import HttpResponse
 from django import views, http
 from django.http.request import HttpRequest
-from django.http.response import HttpResponseBadRequest
+from django.http.response import HttpResponseBadRequest, JsonResponse
 from .models import Stock, StockInfo
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 
 class StockResourceManager(views.View):
@@ -29,6 +31,7 @@ class StockResourceManager(views.View):
             )
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class StockInfoResourceManager(views.View):
     """
     Managment class for the stock info model.
@@ -43,23 +46,31 @@ class StockInfoResourceManager(views.View):
             )
         
         try:
-            stock = Stock.objects.get(ticker=stock_info.ticker)
+            stock = Stock.objects.get(ticker=stock_info.get('ticker'))
+        except AttributeError:
+            return HttpResponseBadRequest('request body does not have property ticker.')
         except Stock.DoesNotExist:
-            return HttpResponseBadRequest(f'{stock_info.ticker} does not exist in db')
+            return HttpResponseBadRequest(f'Ticker does not exist in db')
 
         try:
             new_entry = StockInfo(
                 ticker=stock, 
-                date=stock_info.date,
-                open_price=stock_info.open_price,
-                low=stock_info.low,
-                volume=stock_info.volume,
-                close=stock_info.close,
-                high= stock_info.high,
+                date=stock_info.get('date'),
+                open_price=stock_info.get('open_price'),
+                low=stock_info.get('low'),
+                volume=stock_info.get('volume'),
+                close=stock_info.get('close'),
+                high= stock_info.get('high'),
             )
             new_entry.save()
-        except ValueError:
+        except StockInfo.ValidationError:
             return HttpResponseBadRequest('Please check to see that your request body is valid.')
+
+        response_json = {
+            "message":f"Successfully added {new_entry}",
+            "data":str(new_entry),
+        }
+        return JsonResponse(response_json)
         
 
 
