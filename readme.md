@@ -15,8 +15,8 @@
 
 ### Steps in creating this MVP
 
-0. Initial API Setup 
-1. Create a database that stores historical stock data on our target stocks.
+0. Initial API Setup <Completed>
+1. Create a database that stores historical stock data on our target stocks.<Completed>
 2. Create a news database that stores information on stocks associated with a date
 3. Write a model that classifies sentiment.
 4. Create a database to store the classification_results.
