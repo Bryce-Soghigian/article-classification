@@ -7,7 +7,7 @@ class Stock(models.Model):
     ticker = models.TextField(primary_key=True, unique=True)
     security_name = models.TextField()
     market_category = models.TextField()
-    asset_class = models.TextField() 
+    asset_class = models.TextField(default="STOCK") 
     
     def __repr__(self) -> str:
         return f'ASSET__{self.ticker}'
