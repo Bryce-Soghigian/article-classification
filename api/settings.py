@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'stock_news.apps.StockNewsConfig',
     'stock_info.apps.StockInfoConfig',
     'django.contrib.admin',
     'django.contrib.auth',

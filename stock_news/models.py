@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models.deletion import PROTECT
-from ..stock_info.models import Stock
+from stock_info.models import Stock
 # Create your models here.
 
 class NewsArticle(models.Model):
