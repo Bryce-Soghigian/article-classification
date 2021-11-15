@@ -82,6 +82,12 @@ class BaseWebScrapper:
             )
             new_news.save()
 
+    def main(self):
+        """
+        Main webscraper function where we can execute all of our methods.
+        """
+        raise NotImplementedError
+
 class YahooWebScraper(BaseWebScrapper):
     """
     Class that encapsulates the logic for scrapping news from yahoo finance.
@@ -93,7 +99,7 @@ class YahooWebScraper(BaseWebScrapper):
         """
         1. Scrape all aritcles we can scrape
         2. add those article urls to a deque
-        3. One by one parse those articles
+        3. One by one parse those articles and add them to a database
         """
         self.gather_homepages_to_scrape(self, base_url=constants.yahoo_url)
 
@@ -124,7 +130,7 @@ class NasdaqWebscraper(BaseWebScrapper):
             process_link = link.split("/")
             if process_link[3] == 'articles':
                 new_artcle = Article(
-                    origin_link = link,
+                    origin_link=link,
                     article_title=process_link[4]
                 )
                 self.articles.append(new_artcle)
@@ -181,3 +187,17 @@ class NasdaqWebscraper(BaseWebScrapper):
             self._scrape_article_from_nasdaq(article_obj=article)
 
         self._add_all_articles_to_db()
+
+def web_scraper_factory(scraper_type):
+    """
+    Factory Function for generating WebScrapers.
+    """
+    if scraper_type == "":
+        raise BadRequest('Missing a scraper type')
+    elif scraper_type == 'nasdaq':
+        return NasdaqWebscraper()
+    elif scraper_type == "yahoo":
+        return YahooWebScraper()
+    else:
+        raise Exception('Scrapper Does Not Exist')
+
